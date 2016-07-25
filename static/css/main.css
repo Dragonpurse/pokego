@@ -1706,6 +1706,9 @@ button,
     .button {
       padding: 0; } }
 
+#search-location {
+  width: 100%; }
+
 /* Grid Demo */
 .grid-demo {
   display: block;

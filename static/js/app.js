@@ -91,8 +91,6 @@
           lng: position.coords.longitude
         };
 
-        console.log(loc.lat);
-
         $.post("next_loc?lat=" + loc.lat + "&lon=" + loc.lng, {}).done(function (data) {
 		        $("#next-location").val("");
 		        map.setCenter(loc);

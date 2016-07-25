@@ -125,26 +125,34 @@ function initSidebar() {
     $('#scanned-switch').prop('checked', localStorage.showScanned === 'true');
     $('#sound-switch').prop('checked', localStorage.playSound === 'true');
 
-    var searchBox = new google.maps.places.SearchBox(document.getElementById('next-location'));
+    var input_location = document.querySelector('#next-location');
+    var search_location = document.querySelector('#search-location');
+    var geocoder = new google.maps.Geocoder;
+    search_location.addEventListener('click', function() {
+        codeAddress(geocoder, map);
+    });
 
-    searchBox.addListener('places_changed', function() {
-        var places = searchBox.getPlaces();
+    input_location.addEventListener('keydown', function(e) {
+      // Enter
+      if (e.which == 13) {
+        codeAddress(geocoder, map);
+      }
+    });
+}
 
-        if (places.length == 0) {
-            return;
-        }
-
-        var loc = places[0].geometry.location;
-        $.post("next_loc?lat=" + loc.lat() + "&lon=" + loc.lng(), {}).done(function (data) {
-            $("#next-location").val("");
-            map.setCenter(loc);
-            marker.setPosition(loc);
-        });
+function codeAddress(geocoder, map) {
+    var address = document.querySelector('#next-location').value;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+        marker.setPosition(results[0].geometry.location);
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
     });
 }
 
 var pad = function (number) { return number <= 99 ? ("0" + number).slice(-2) : number; }
-
 
 function pokemonLabel(name, disappear_time, id, latitude, longitude) {
     disappear_date = new Date(disappear_time)
