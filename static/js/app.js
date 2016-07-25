@@ -35,6 +35,8 @@
 		$navClose;
 
 	var $overlay = document.querySelector('#trigger-overlay');
+	var $location = document.querySelector('#location');
+	var $nextLocation = document.querySelector('#next-location');
 
 	// Event: Prevent clicks/taps inside the nav from bubbling.
 	addEventsListener($nav, 'click touchend', function(event) {
@@ -76,5 +78,35 @@
 		event.stopPropagation();
 		$nav.classList.remove('visible');
 	});
+
+	// Event: click location
+	$location.addEventListener('click', function(event) {
+		event.preventDefault();
+		var infoWindow = new google.maps.InfoWindow({map: map});
+
+		if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var loc = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+
+        console.log(loc.lat);
+
+        $.post("next_loc?lat=" + loc.lat + "&lon=" + loc.lng, {}).done(function (data) {
+		        $("#next-location").val("");
+		        map.setCenter(loc);
+		        marker.setPosition(loc);
+		    });
+      }, function() {
+        handleLocationError(true, infoWindow, map.getCenter());
+      });
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, infoWindow, map.getCenter());
+    }
+	});
+
+
 
 })();

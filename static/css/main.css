@@ -1381,6 +1381,16 @@ textarea {
   .icon > .label {
     display: none; }
 
+.fa {
+  color: black; }
+
+#location {
+  line-height: 25px;
+  margin-left: 10px; }
+
+span {
+  display: inline-flex; }
+
 /* Image */
 .image {
   border-radius: 4px;
