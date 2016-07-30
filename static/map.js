@@ -64,8 +64,6 @@ var pGoStyle=[{"featureType":"landscape.man_made","elementType":"geometry.fill",
 var selectedStyle = 'light';
 
 function initMap() {
-
-
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
             lat: center_lat,
@@ -144,8 +142,10 @@ function codeAddress(geocoder, map) {
     var address = document.querySelector('#next-location').value;
     geocoder.geocode( { 'address': address}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
+        $.post("next_loc?lat=" + results[0].geometry.location.lat() + "&lon=" + results[0].geometry.location.lng(), {}).done(function (data) {
         map.setCenter(results[0].geometry.location);
         marker.setPosition(results[0].geometry.location);
+        });
       } else {
         alert("Geocode was not successful for the following reason: " + status);
       }
